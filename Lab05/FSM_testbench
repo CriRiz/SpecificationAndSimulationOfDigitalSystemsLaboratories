@@ -1,0 +1,25 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity FSM_Testbench is
+end FSM_Testbench;
+
+architecture Behavioral of FSM_Testbench is
+signal P_s, Clk_s, Rst_s, R_s: std_logic;
+CONSTANT ClockPeriod: Time := 20 ns;
+
+begin
+
+Comptotest: entity work.FSM_1(Behavioural)
+    port map(P => P_s, Clk => Clk_s, Rst => Rst_s, R => R_s);
+
+clk_process: PROCESS
+begin
+    Clk_s <= '0';
+    WAIT for (ClockPeriod/2);
+    
+    Clk_s <= '1';
+    WAIT for (ClockPeriod/2);
+END PROCESS clk_process;
+
+end Behavioral;
