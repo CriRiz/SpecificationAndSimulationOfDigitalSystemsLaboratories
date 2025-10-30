@@ -1,0 +1,60 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity FSM_2 is
+    Port (Clk, Rst, UpDw: IN std_logic;
+          count: OUT std_logic_vector(3 downto 0));
+end FSM_2;
+
+architecture Behavioral of FSM_2 is
+    type Statetype is (S0, S1, S2, S3);
+    signal CurrentState, NextState: Statetype;
+begin
+    StateReg: process(Clk, Rst)
+    begin
+        if (Rst = '1') then
+            Currentstate <= S0;
+        elsif (rising_edge(Clk)) then
+            Currentstate <= Nextstate;
+        end if;
+    end process StateReg;
+    
+    CombLogic: process(CurrentState, UpDw)
+        begin
+            case CurrentState is 
+                when S0 =>
+                    if UpDw = '0' then 
+                        NextState <= S3;
+                        count <= "0001";
+                    else 
+                        NextState <= S1;
+                        count <= "0100";
+                 end if;
+                 when S1 => 
+                    if UpDw = '0' then
+                        NextState <= S0; 
+                        count <= "1000";
+                    else
+                        NextState <= S2;
+                        count <= "0010";
+                    end if;
+                 when S2 => 
+                    if UpDw = '0' then 
+                        NextState <= S1;
+                        count <= "0100";
+                    else 
+                        NextState <= S3;
+                        count <= "0001";
+                    end if;
+                 when S3 => 
+                    if UpDw = '0' then 
+                        NextState <= S2;
+                        count <= "0010";
+                    else 
+                        NextState <= S0;
+                        count <= "1000";
+                    end if;
+             end case;
+    end process CombLogic;
+    
+end Behavioral;

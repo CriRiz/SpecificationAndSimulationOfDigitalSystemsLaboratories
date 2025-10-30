@@ -1,0 +1,55 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity FSM_2_tb is
+end FSM_2_tb;
+
+architecture Behavioral of FSM_2_tb is
+
+    signal Clk_s  : std_logic := '0';
+    signal Rst_s  : std_logic := '0';
+    signal UpDw_s : std_logic := '0';
+    signal count_s: std_logic_vector(3 downto 0);
+
+    constant ClockPeriod : time := 20 ns;
+
+begin
+
+    Comptotest: entity work.FSM_2(Behavioural)
+        port map (Clk   => Clk_s, Rst   => Rst_s, UpDw  => UpDw_s, count => count_s);
+
+    clk_process: PROCESS
+    begin
+        Clk_s <= '0';
+        wait for (ClockPeriod/2);
+        Clk_s <= '1';
+        wait for (ClockPeriod/2);
+    end process clk_process;
+
+
+    VectorProcess: process
+    
+    begin
+        -- Reset iniziale
+        Rst_s <= '1';
+        wait for 30 ns;
+        Rst_s <= '0';
+        wait for ClockPeriod;
+        
+        -- UpDw = 1 (conteggio "up")
+        UpDw_s <= '1';
+        wait for 8 * ClockPeriod;
+
+        -- UpDw = 0 (conteggio "down")
+        UpDw_s <= '0';
+        wait for 8 * ClockPeriod;
+
+        UpDw_s <= '1';
+        wait for 4 * ClockPeriod;
+        UpDw_s <= '0';
+        wait for 4 * ClockPeriod;
+
+        wait;
+    end process VectorProcess;
+
+end Behavioral;
