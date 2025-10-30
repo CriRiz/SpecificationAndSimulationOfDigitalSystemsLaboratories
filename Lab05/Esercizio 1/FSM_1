@@ -1,0 +1,44 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity FSM_1 is
+    Port (P: IN std_logic;
+          Clk, Rst: IN std_logic;
+          R: OUT std_logic);
+end FSM_1;
+
+architecture Behavioral of FSM_1 is
+    TYPE Statetype is (A, B, C, D);
+    SIGNAL Currentstate, Nextstate: Statetype;
+begin
+    CombLogic: PROCESS(Currentstate, P)
+    begin 
+        case Currentstate is
+            When A => R <= '0';
+                IF (P = '0') then Nextstate <= A;
+                ELSE Nextstate <= B;
+                END IF;
+            When B => R <= '0';
+                IF (P = '0') then Nextstate <= B;
+                ELSE Nextstate <= C;
+                END IF;
+            When C => R <= '0';
+                IF (P = '0') then Nextstate <= C;
+                ELSE Nextstate <= D;
+                END IF;
+           When D => R <= '1';
+                IF (P = '0') then Nextstate <= A;
+                ELSE Nextstate <= B;
+                END IF;
+         END CASE;
+    end PROCESS CombLogic;
+    
+    StateReg: PROCESS(Clk)
+    begin 
+    IF (rising_edge(Clk)) then 
+        IF (Rst = '1') then Currentstate <= A;
+        ELSE Currentstate <= Nextstate;
+        END IF;
+    END IF;
+    end PROCESS StateReg;
+end Behavioral;
